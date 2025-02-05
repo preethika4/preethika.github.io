@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Management Form</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <form id="healthForm">
+    <h2>Health Management Form</h2>
+    
+    <!-- Patient Information -->
+    <label for="patient-name">Patient Name:</label>
+    <input type="text" id="patient-name" name="patientName" placeholder="Enter patient name" required>
+
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" placeholder="Enter age" required>
+
+    <label for="gender">Gender:</label>
+    <select id="gender" name="gender" required>
+      <option value="" disabled selected>Select gender</option>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+      <option value="other">Other</option>
+    </select>
+
+    <label for="contact">Contact Number:</label>
+    <input type="tel" id="contact" name="contact" placeholder="Enter contact number" required pattern="[0-9]{10}">
+
+    <!-- Prescription Details -->
+    <label for="prescription">Prescription Details:</label>
+    <textarea id="prescription" name="prescription" rows="4" placeholder="Enter prescription details" required></textarea>
+
+    <!-- Submit Button -->
+    <button type="submit">Submit</button>
+  </form>
+
+
+
+  
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-database.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDPdLAfOY1Hel-xxXHs6vqLZs12PCGZS-8",
+      authDomain: "hospital-form-a10f0.firebaseapp.com",
+      databaseURL: "https://hospital-form-a10f0-default-rtdb.firebaseio.com/",
+      projectId: "hospital-form-a10f0",
+      storageBucket: "hospital-form-a10f0.appspot.com",
+      messagingSenderId: "640803059572",
+      appId: "1:640803059572:web:144d87da98990cc3255e21",
+      measurementId: "G-8KB4JX6GMJ"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // Handle form submission
+    const form = document.getElementById('healthForm');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Collect form data
+      const patientName = document.getElementById('patient-name').value;
+      const age = document.getElementById('age').value;
+      const gender = document.getElementById('gender').value;
+      const contact = document.getElementById('contact').value;
+      const prescription = document.getElementById('prescription').value;
+
+      // Write data to Firebase
+      const newPatientRef = ref(database, 'patients/' + Date.now());
+      set(newPatientRef, {
+        patientName,
+        age,
+        gender,
+        contact,
+        prescription
+      })
+      .then(() => {
+        alert('Data submitted successfully!');
+        form.reset();
+      })
+      .catch((error) => {
+        alert('Error submitting data: ' + error.message);
+      });
+    });
+  </script>
+</body>
+</html>
+
